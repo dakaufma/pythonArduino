@@ -29,16 +29,29 @@ class Stepper
     }
     void step(int steps)
     {
-      digitalWrite(enablePin, LOW);
-      for (int i = 0; i < steps; i++)
-      {
-        digitalWrite(stepPin, HIGH);
-        delayMicroseconds(100);
-        digitalWrite(stepPin, LOW);
-        delayMicroseconds(100);
+        int i;
+      
+        digitalWrite(enablePin, LOW);     // Set the direction.
+        delay(100);
+      
+        for (i = 0; i<4000; i++)       // Iterate for 4000 microsteps.
+        {
+          digitalWrite(stepPin, LOW);  // This LOW to HIGH change is what creates the
+          digitalWrite(stepPin, HIGH); // "Rising Edge" so the easydriver knows to when to step.
+          delayMicroseconds(500);      // This delay time is close to top speed for this
+        }                              // particular motor. Any faster the motor stalls.
+      
+        digitalWrite(enablePin, HIGH);    // Change direction.
+        delay(100);
+      
+        for (i = 0; i<4000; i++)       // Iterate for 4000 microsteps
+        {
+          digitalWrite(stepPin, LOW);  // This LOW to HIGH change is what creates the
+          digitalWrite(stepPin, HIGH); // "Rising Edge" so the easydriver knows to when to step.
+          delayMicroseconds(500);      // This delay time is close to top speed for this
+        }                              // particular motor. Any faster the motor stalls.
+      
       }
-      digitalWrite(enablePin, HIGH);
-    }
 };
 
 // Define a class that manages a motor (through the

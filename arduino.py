@@ -59,7 +59,7 @@ class Arduino(threading.Thread):
         for i in range(4):
             try:
                 # Try to create the serial connection
-                self.port=serial.Serial(port='\\.\COM4', baudrate=9600, timeout=0.5)
+                self.port=serial.Serial(port='\\.\COM5', baudrate=9600, timeout=0.5)
                 if self.port.isOpen():
                     time.sleep(2) # Wait for Arduino to initialize
                     print "Connected"
@@ -371,35 +371,14 @@ class Motor:
         self.arduino.setMotorSpeed(self.index, speed)
 
 class Stepper:
-    def __init__(self, arduino, stepPort, dirPort):
+    def __init__(self, arduino, stepPort, enablePort):
         self.arduino = arduino
         self.stepPort = stepPort
-        self.dirPort = dirPort
-        self.index = self.arduino.addStepper(stepPort, dirPort)
-
+        self.enablePort = enablePort
+        self.index = self.arduino.addStepper(stepPort, enablePort)
     def step(self, step):
-
-        # if step > 0:
-        #     dirPort.setValue(0)
-        # else: 
-        #     dirPort.setValue(1)
-            
-        dirPort.setValue(0)
-        time.sleep(.1)
-
-        for i in xrange(0, 4000):      
-            stepPort.setValue(0)
-            stepPort.setValue(1)
-            time.sleep(0.0005)
-
-        dirPort.setValue(1)
-        time.sleep(.1)
-
-        for i in xrange(0, 4000):      
-            stepPort.setValue(0)
-            stepPort.setValue(1)
-            time.sleep(0.0005)
-
+        self.arduino.stepStepper(self.index, step)
+        
 # Class to interact with a digital sensor
 class DigitalInput:
     def __init__ (self, arduino, port):
